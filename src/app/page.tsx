@@ -121,14 +121,71 @@ export default function Home() {
     const doc = new jsPDF();
 
     // Add content to the PDF
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(24);
+    doc.setTextColor("#00C2A8");
+    doc.text(translations[language].zertifikatHerunterladen, 20, 30);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(12);
+    doc.setTextColor("#000000"); // Black color
+    doc.text("Hiermit wird bestätigt, dass", 20, 50);
+
+    // Add a placeholder for the user's name. In a real application, you might
+    // want to ask for the user's name and include it here.
+    doc.setFont('helvetica', 'bold');
+    doc.text("Ihr Name Hier", 20, 60);
+
+    doc.setFont('helvetica', 'normal');
+    doc.text("erfolgreich den Pfarrkirchen Explorer abgeschlossen hat.", 20, 70);
+    doc.setFont('helvetica', 'normal');
     doc.text(
-      translations[language].zertifikatHerunterladen,
-      10,
-      10
+      "Durch das Lösen von Rätseln, das Erkunden verborgener Geschichten",
+      20,
+      80
     );
-    doc.text(translations[language].herzlichenGluckwunsch, 10, 30);
-    doc.text(translations[language].duHastAlleStationen, 10, 40);
-    doc.text("Ausgestellt am: " + new Date().toLocaleDateString(), 10, 50);
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      "und den Besuch aller 7 historischen Orte haben Sie sich als",
+      20,
+      90
+    );
+    doc.setFont('helvetica', 'normal');
+    doc.text(
+      "wahrer Entdecker der lokalen Geschichte bewiesen!",
+      20,
+      100
+    );
+
+    doc.setFont('helvetica', 'bold');
+    doc.text("Besuchte Sehenswürdigkeiten:", 20, 120);
+
+    doc.setFont('helvetica', 'normal');
+    const visitedLandmarks = stations.map((station, index) => {
+      return `${index + 1}. ${station.title}`;
+    });
+    let y = 130;
+    visitedLandmarks.forEach((landmark) => {
+      doc.text(landmark, 20, y);
+      y += 10;
+    });
+
+    doc.setFont('helvetica', 'normal');
+    doc.text("Datum: " + new Date().toLocaleDateString(), 20, 190);
+    doc.text("Ort: Pfarrkirchen, Deutschland", 20, 200);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor("#00C2A8");
+    doc.text("Das Pfarrkirchen Explorer Team", 20, 220);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor("#808080");
+    doc.text(
+      "Pfarrkirchen Explorer - Entdecke weiter. Bleib neugierig.",
+      20,
+      270
+    );
 
     // Download the PDF
     doc.save("Pfarrkirchen_Explorer_Zertifikat.pdf");
