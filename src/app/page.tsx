@@ -238,7 +238,7 @@ export default function Home() {
  * RouteOverview Component: Displays an overview of the scavenger hunt route, including a map and a list of stations.
  */
 interface RouteOverviewProps {
-  stations: { id: number; title: string; riddle: string }[];
+  stations: { id: number; title: string; riddle: string; latitude: number; longitude: number }[];
   onComplete: () => void;
 }
 
@@ -300,8 +300,8 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
     const loadMap = async () => {
       if (!mapRef.current) return;
 
-      const L = require("leaflet");
-      require("leaflet/dist/leaflet.css");
+      const L = await import("leaflet");
+      await import("leaflet/dist/leaflet.css");
 
       const map = L.map(mapRef.current).setView(
         [station.latitude, station.longitude],
