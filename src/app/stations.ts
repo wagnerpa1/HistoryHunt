@@ -4,7 +4,8 @@ export const stations = [
     title: "Neues + Altes Rathaus",
     riddle:
       "Wo Entscheidungen getroffen werden und Gesetze ihren Lauf nehmen, entfaltet sich die Regierung und gestaltet Tag und Nacht. Zwei Hallen stehen als eine, alt und neu vereint.",
-    correctAnswer: "Rathaus",
+    options: ["Rathaus", "Kirche", "Schule", "Museum"],
+    correctAnswerIndex: 0,
     mapUrl: "https://picsum.photos/400/300",
     googleMapsLink:
       "https://www.google.com/maps/dir/?api=1&destination=Neues Rathaus Pfarrkirchen",
@@ -18,7 +19,8 @@ export const stations = [
     title: "Altstadt / Stadtmauer",
     riddle:
       "Steingekleidete Umarmung, die unzählige Geschichten bewacht, wandere den Pfad entlang, wo sich die Geschichte entfaltet. Entdecke, wo die Vergangenheit noch immer hoch steht.",
-    correctAnswer: "Altstadt",
+    options: ["Altstadt", "Neustadt", "Industriegebiet", "Park"],
+    correctAnswerIndex: 0,
     mapUrl: "https://picsum.photos/400/300",
     googleMapsLink:
       "https://www.google.com/maps/dir/?api=1&destination=Altstadt Pfarrkirchen",
@@ -32,7 +34,8 @@ export const stations = [
     title: "Alte Rennbahn",
     riddle:
       "Wo einst Pferde donnerten, wohnen jetzt Erinnerungen, eine Spur der Vergangenheit, wo Geschwindigkeit und Nervenkitzel zusammentreffen. Suche die Überreste des Ovals, wo die Geschichte erhalten bleibt.",
-    correctAnswer: "Alte Rennbahn",
+    options: ["Alte Rennbahn", "Neuer Park", "Einkaufszentrum", "Bürogebäude"],
+    correctAnswerIndex: 0,
     mapUrl: "https://picsum.photos/400/300",
     googleMapsLink:
       "https://www.google.com/maps/dir/?api=1&destination=Alte Rennbahn Pfarrkirchen",
@@ -46,7 +49,8 @@ export const stations = [
     title: "Heilig-Geist-Spital",
     riddle:
       "In der Umarmung des Geistes wohnen Fürsorge und Trost, eine Oase der Heilung, in der Mitgefühl der Wegweiser ist. Suche den Ort der Fürsorge, wo der Heilige Geist ist.",
-    correctAnswer: "Heilig-Geist-Spital",
+    options: ["Heilig-Geist-Spital", "Krankenhaus", "Altersheim", "Tagespflege"],
+    correctAnswerIndex: 0,
     mapUrl: "https://picsum.photos/400/300",
     googleMapsLink:
       "https://www.google.com/maps/dir/?api=1&destination=Heilig-Geist-Spital Pfarrkirchen",
@@ -60,7 +64,8 @@ export const stations = [
     title: "Stadtpfarrkirche",
     riddle:
       "Unter dem Dach, geschmückt mit so großartiger Kunst, ein hoch aufragender Turm, der auf das gelobte Land zeigt. Finde Trost im Haus Gottes, wo deine Gebete erhört werden.",
-    correctAnswer: "Stadtpfarrkirche",
+    options: ["Stadtpfarrkirche", "Synagoge", "Moschee", "Tempel"],
+    correctAnswerIndex: 0,
     mapUrl: "https://picsum.photos/400/300",
     googleMapsLink:
       "https://www.google.com/maps/dir/?api=1&destination=Stadtpfarrkirche Pfarrkirchen",
@@ -74,7 +79,8 @@ export const stations = [
     title: "Gartlberg Kirche",
     riddle:
       "Ich stehe hoch, ein Leuchtfeuer des Glaubens, wo stille Glocken mit Anmut widerhallen. Finde mich auf der Spitze des Berges, wo du Trost finden wirst.",
-    correctAnswer: "Gartlberg Kirche",
+    options: ["Gartlberg Kirche", "Schloss", "Denkmal", "Aussichtsturm"],
+    correctAnswerIndex: 0,
     mapUrl: "https://picsum.photos/400/300",
     googleMapsLink:
       "https://www.google.com/maps/dir/?api=1&destination=Gartlberg Kirche Pfarrkirchen",
@@ -88,7 +94,8 @@ export const stations = [
     title: "Wimmer-Ross",
     riddle:
       "Inmitten des Stadtzentrums tanzt das Wasser frei, ein Symbol des Lebens für alle. Suche die trinkenden Pferde, wo lebensspendende Wasser entspringen.",
-    correctAnswer: "Wimmer-Ross",
+    options: ["Wimmer-Ross", "Marktplatz", "Springbrunnen", "Café"],
+    correctAnswerIndex: 0,
     mapUrl: "https://picsum.photos/400/300",
     googleMapsLink:
       "https://www.google.com/maps/dir/?api=1&destination=Wimmer-Ross Pfarrkirchen",

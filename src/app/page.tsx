@@ -15,6 +15,7 @@ import { Map } from "./map";
 import { stations } from "./stations";
 import { jsPDF } from "jspdf";
 import { Icon } from "@iconify/react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 /**
  * Home Component: Main component for the Pfarrkirchen Explorer application.
@@ -25,7 +26,7 @@ export default function Home() {
   // State variables for managing the application flow
   const [currentStation, setCurrentStation] = useState(1); // Current station number
   const [progress, setProgress] = useState(0); // Progress of the scavenger hunt
-  const [answer, setAnswer] = useState(""); // User's answer to the current riddle
+  const [answer, setAnswer] = useState<string | null>(null); // User's answer to the current riddle
   const [isCompleted, setIsCompleted] = useState(false); // Completion status of the scavenger hunt
   const [showWelcome, setShowWelcome] = useState(true); // Visibility of the welcome screen
   const [showOverview, setShowOverview] = useState(false); // Visibility of the route overview screen
@@ -63,7 +64,7 @@ export default function Home() {
     setSubmitted(true);
 
     if (
-      answer.toLowerCase() === currentStationData.correctAnswer.toLowerCase()
+      currentStationData.options[currentStationData.correctAnswerIndex] === answer
     ) {
       setStationStage("explanation");
       setSubmitted(false);
@@ -454,10 +455,11 @@ interface QuestionScreenProps {
     id: number;
     title: string;
     riddle: string;
-    correctAnswer: string;
+    options: string[];
+    correctAnswerIndex: number;
   };
-  answer: string;
-  setAnswer: (answer: string) => void;
+  answer: string | null;
+  setAnswer: (answer: string | null) => void;
   feedbackMessage: string;
   submitted: boolean;
   handleAnswerSubmit: () => void;
@@ -485,12 +487,19 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
             {feedbackMessage}
           </div>
         )}
-        <Input
-          type="text"
-          placeholder="Deine Antwort"
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
-        />
+        <RadioGroup value={answer} onValueChange={setAnswer}>
+          {station.options.map((option, index) => (
+            <div key={index} className="flex items-center space-x-2">
+              <RadioGroupItem value={option} id={`option-${index}`} />
+              <label
+                htmlFor={`option-${index}`}
+                className="cursor-pointer leading-none peer-data-[state=checked]:text-foreground"
+              >
+                {option}
+              </label>
+            </div>
+          ))}
+        </RadioGroup>
         <Button
           onClick={handleAnswerSubmit}
           className="transition-transform hover:scale-105"
