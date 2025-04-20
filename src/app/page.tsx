@@ -16,58 +16,14 @@ import { stations } from "./stations";
 import { jsPDF } from "jspdf";
 import { Icon } from "@iconify/react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
-// Translations
-const translations = {
-  de: {
-    welcomeTitle: "Willkommen beim Pfarrkirchen Explorer!",
-    welcomeDescription:
-      "Mach dich bereit, die verborgenen Schätze von Pfarrkirchen zu entdecken.",
-    start: "Starten",
-    routeOverview: "Routenübersicht",
-    station: "Station",
-    von: "von",
-    pfarrkirchenExplorer: "Pfarrkirchen Explorer",
-    entdeckeDieSchatze: "Entdecke die verborgenen Schätze von Pfarrkirchen!",
-    navigationTo: "Navigation zu",
-    routeInGoogleMaps: "Route in Google Maps öffnen",
-    angekommen: "Angekommen!",
-    mehrUber: "Mehr über",
-    weiter: "Weiter",
-    richtigeAntwort: "Richtige Antwort",
-    falscheAntwort: "Falsche Antwort. Bitte versuche es erneut.",
-    antwortAbsenden: "Antwort absenden",
-    zuruckZurNavigation: "Zurück zur Navigation",
-    herzlichenGluckwunsch: "Herzlichen Glückwunsch!",
-    duHastAlleStationen:
-      "Du hast alle Stationen des Pfarrkirchen Explorers abgeschlossen!",
-    zertifikatHerunterladen: "Zertifikat herunterladen",
-    stationsdatenNichtGefunden: "Stationsdaten nicht gefunden.",
-  },
-  en: {
-    welcomeTitle: "Welcome to Pfarrkirchen Explorer!",
-    welcomeDescription: "Get ready to discover the hidden treasures of Pfarrkirchen.",
-    start: "Start",
-    routeOverview: "Route Overview",
-    station: "Station",
-    von: "of",
-    pfarrkirchenExplorer: "Pfarrkirchen Explorer",
-    entdeckeDieSchatze: "Discover the hidden treasures of Pfarrkirchen!",
-    navigationTo: "Navigation to",
-    routeInGoogleMaps: "Open route in Google Maps",
-    angekommen: "Arrived!",
-    mehrUber: "More about",
-    weiter: "Next",
-    richtigeAntwort: "Correct answer",
-    falscheAntwort: "Wrong answer. Please try again.",
-    antwortAbsenden: "Submit answer",
-    zuruckZurNavigation: "Back to navigation",
-    herzlichenGluckwunsch: "Congratulations!",
-    duHastAlleStationen: "You have completed all stations of the Pfarrkirchen Explorer!",
-    zertifikatHerunterladen: "Download certificate",
-    stationsdatenNichtGefunden: "Station data not found.",
-  },
-};
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { translations } from "./i18n/translations";
 
 /**
  * Home Component: Main component for the Pfarrkirchen Explorer application.
@@ -200,18 +156,15 @@ export default function Home() {
             {t.welcomeDescription}
           </p>
           <div className="flex justify-center space-x-4 mb-4">
-            <Button
-              onClick={() => setLanguage("de")}
-              className="transition-transform hover:scale-105"
-            >
-              Deutsch
-            </Button>
-            <Button
-              onClick={() => setLanguage("en")}
-              className="transition-transform hover:scale-105"
-            >
-              English
-            </Button>
+            <Select onValueChange={setLanguage} defaultValue={language}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select a language" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="de">Deutsch</SelectItem>
+                <SelectItem value="en">English</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <Button
             onClick={handleStartClick}
