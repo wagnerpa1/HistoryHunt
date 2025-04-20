@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -338,7 +339,8 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
   const [error, setError] = useState<string | null>(null);
   const t = translations[language];
 
-  const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${nextStation.latitude},${nextStation.longitude}`;
+  // Use the current station's coordinates for the Google Maps link
+  const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
 
   useEffect(() => {
     const loadMap = async () => {
@@ -565,3 +567,4 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
     </Card>
   );
 };
+
