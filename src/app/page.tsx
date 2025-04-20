@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -41,8 +40,9 @@ export default function Home() {
   const [showOverview, setShowOverview] = useState(false); // Visibility of the route overview screen
 
   // Station stage can be "navigation", "explanation", or "question"
-  const [stationStage, setStationStage] =
-    useState<"navigation" | "explanation" | "question">("navigation");
+  const [stationStage, setStationStage] = useState<
+    "navigation" | "explanation" | "question"
+  >("navigation");
   const [feedbackMessage, setFeedbackMessage] = useState(""); // Feedback message for the user
   const [submitted, setSubmitted] = useState(false); // Whether the answer has been submitted
   const [language, setLanguage] = useState("de"); // Current language state
@@ -349,10 +349,22 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
       const L = await import("leaflet");
       await import("leaflet/dist/leaflet.css");
 
+      // Define a custom marker icon
+      const customIcon = L.icon({
+        iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png", // URL to your custom marker icon
+        iconSize: [25, 41], // size of the icon
+        iconAnchor: [12, 41], // point of the icon which will correspond to marker's location
+        popupAnchor: [1, -34], // point from which the popup should open relative to the iconAnchor
+        shadowUrl: null, //URL to the shadow image.
+      });
+
       // Check if the map container already has a Leaflet map instance
       if (mapRef.current.leafletElement) {
         // If so, just set the view to the station's coordinates
         mapRef.current.leafletElement.setView([latitude, longitude], 15);
+        L.marker([latitude, longitude], { icon: customIcon })
+        .addTo(mapRef.current.leafletElement)
+        .bindPopup(title);
       } else {
         // Otherwise, create a new map instance
         const map = L.map(mapRef.current).setView([latitude, longitude], 15);
@@ -363,7 +375,7 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
             '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         }).addTo(map);
 
-        L.marker([latitude, longitude])
+        L.marker([latitude, longitude], { icon: customIcon })
           .addTo(map)
           .bindPopup(title);
 
@@ -567,4 +579,3 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
     </Card>
   );
 };
-
