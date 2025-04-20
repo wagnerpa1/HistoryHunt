@@ -219,7 +219,7 @@ export default function Home() {
             placeholder="Dein Name"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
-            className="w-full max-w-sm mb-4"
+            className="w-full max-w-sm mb-4 mx-auto"
           />
           <div className="flex justify-center space-x-4 mb-4">
             <Select onValueChange={setLanguage} defaultValue={language}>
