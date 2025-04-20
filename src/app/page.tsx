@@ -201,6 +201,7 @@ export default function Home() {
               <div className="slide-in-right">
                 <NavigationScreen
                   station={stations[currentStation - 1]}
+                  nextStation={stations[currentStation]}
                   onArrived={handleNavigationArrived}
                   language={language}
                 />
@@ -313,13 +314,20 @@ interface NavigationScreenProps {
     latitude: number;
     longitude: number;
   };
+  nextStation: {
+    id: number;
+    title: string;
+    latitude: number;
+    longitude: number;
+  };
   onArrived: () => void;
   language: string;
 }
 
 const NavigationScreen: React.FC<NavigationScreenProps> = ({
   station,
-  station: { latitude, longitude, title, googleMapsLink },
+  nextStation,
+  station: { latitude, longitude, title },
   onArrived,
   language,
 }) => {
@@ -329,6 +337,8 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
   >(null);
   const [error, setError] = useState<string | null>(null);
   const t = translations[language];
+
+  const googleMapsLink = `https://www.google.com/maps/dir/?api=1&destination=${nextStation.latitude},${nextStation.longitude}`;
 
   useEffect(() => {
     const loadMap = async () => {
