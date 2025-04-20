@@ -238,7 +238,13 @@ export default function Home() {
  * RouteOverview Component: Displays an overview of the scavenger hunt route, including a map and a list of stations.
  */
 interface RouteOverviewProps {
-  stations: { id: number; title: string; riddle: string; latitude: number; longitude: number }[];
+  stations: {
+    id: number;
+    title: string;
+    riddle: string;
+    latitude: number;
+    longitude: number;
+  }[];
   onComplete: () => void;
 }
 
@@ -303,20 +309,33 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
       const L = await import("leaflet");
       await import("leaflet/dist/leaflet.css");
 
-      const map = L.map(mapRef.current).setView(
-        [station.latitude, station.longitude],
-        15
-      );
+      // Check if the map container already has a Leaflet map instance
+      if (mapRef.current.leafletElement) {
+        // If so, just set the view to the station's coordinates
+        mapRef.current.leafletElement.setView(
+          [station.latitude, station.longitude],
+          15
+        );
+      } else {
+        // Otherwise, create a new map instance
+        const map = L.map(mapRef.current).setView(
+          [station.latitude, station.longitude],
+          15
+        );
 
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution:
-          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      }).addTo(map);
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution:
+            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }).addTo(map);
 
-      L.marker([station.latitude, station.longitude])
-        .addTo(map)
-        .bindPopup(station.title);
+        L.marker([station.latitude, station.longitude])
+          .addTo(map)
+          .bindPopup(station.title);
+
+        // Store the map instance in the ref
+        mapRef.current.leafletElement = map;
+      }
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -335,9 +354,9 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
                 shadowSize: [41, 41],
               }),
             })
-              .addTo(map)
+              .addTo(mapRef.current.leafletElement)
               .bindPopup("Dein Standort");
-            map.setView([latitude, longitude], 15);
+            mapRef.current.leafletElement.setView([latitude, longitude], 15);
           },
           (error) => {
             console.error("Error getting location:", error);
@@ -349,7 +368,7 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
       }
 
       return () => {
-        map.remove();
+        // map.remove();
       };
     };
 
