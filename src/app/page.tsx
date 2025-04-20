@@ -38,6 +38,7 @@ export default function Home() {
   const [isCompleted, setIsCompleted] = useState(false); // Completion status of the scavenger hunt
   const [showWelcome, setShowWelcome] = useState(true); // Visibility of the welcome screen
   const [showOverview, setShowOverview] = useState(false); // Visibility of the route overview screen
+  const [userName, setUserName] = useState("");
 
   // Station stage can be "navigation", "explanation", or "question"
   const [stationStage, setStationStage] = useState<
@@ -121,46 +122,46 @@ export default function Home() {
     const doc = new jsPDF();
 
     // Add content to the PDF
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(24);
     doc.setTextColor("#00C2A8");
     doc.text(translations[language].zertifikatHerunterladen, 20, 30);
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
     doc.setTextColor("#000000"); // Black color
     doc.text("Hiermit wird bestätigt, dass", 20, 50);
 
     // Add a placeholder for the user's name. In a real application, you might
     // want to ask for the user's name and include it here.
-    doc.setFont('helvetica', 'bold');
-    doc.text("Ihr Name Hier", 20, 60);
+    doc.setFont("helvetica", "bold");
+    doc.text(userName, 20, 60);
 
-    doc.setFont('helvetica', 'normal');
-    doc.text("erfolgreich den Pfarrkirchen Explorer abgeschlossen hat.", 20, 70);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
+    doc.text(
+      "erfolgreich den Pfarrkirchen Explorer abgeschlossen hat.",
+      20,
+      70
+    );
+    doc.setFont("helvetica", "normal");
     doc.text(
       "Durch das Lösen von Rätseln, das Erkunden verborgener Geschichten",
       20,
       80
     );
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.text(
       "und den Besuch aller 7 historischen Orte haben Sie sich als",
       20,
       90
     );
-    doc.setFont('helvetica', 'normal');
-    doc.text(
-      "wahrer Entdecker der lokalen Geschichte bewiesen!",
-      20,
-      100
-    );
+    doc.setFont("helvetica", "normal");
+    doc.text("wahrer Entdecker der lokalen Geschichte bewiesen!", 20, 100);
 
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.text("Besuchte Sehenswürdigkeiten:", 20, 120);
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     const visitedLandmarks = stations.map((station, index) => {
       return `${index + 1}. ${station.title}`;
     });
@@ -170,15 +171,15 @@ export default function Home() {
       y += 10;
     });
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.text("Datum: " + new Date().toLocaleDateString(), 20, 190);
     doc.text("Ort: Pfarrkirchen, Deutschland", 20, 200);
 
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setTextColor("#00C2A8");
     doc.text("Das Pfarrkirchen Explorer Team", 20, 220);
 
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor("#808080");
     doc.text(
@@ -213,6 +214,13 @@ export default function Home() {
           <p className="text-lg text-muted-foreground mb-6">
             {t.welcomeDescription}
           </p>
+          <Input
+            type="text"
+            placeholder="Dein Name"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            className="w-full max-w-sm mb-4"
+          />
           <div className="flex justify-center space-x-4 mb-4">
             <Select onValueChange={setLanguage} defaultValue={language}>
               <SelectTrigger className="w-[180px]">
@@ -227,6 +235,7 @@ export default function Home() {
           <Button
             onClick={handleStartClick}
             className="transition-transform hover:scale-105"
+            disabled={!userName}
           >
             {t.start}
           </Button>
