@@ -17,6 +17,58 @@ import { jsPDF } from "jspdf";
 import { Icon } from "@iconify/react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
+// Translations
+const translations = {
+  de: {
+    welcomeTitle: "Willkommen beim Pfarrkirchen Explorer!",
+    welcomeDescription:
+      "Mach dich bereit, die verborgenen Schätze von Pfarrkirchen zu entdecken.",
+    start: "Starten",
+    routeOverview: "Routenübersicht",
+    station: "Station",
+    von: "von",
+    pfarrkirchenExplorer: "Pfarrkirchen Explorer",
+    entdeckeDieSchatze: "Entdecke die verborgenen Schätze von Pfarrkirchen!",
+    navigationTo: "Navigation zu",
+    routeInGoogleMaps: "Route in Google Maps öffnen",
+    angekommen: "Angekommen!",
+    mehrUber: "Mehr über",
+    weiter: "Weiter",
+    richtigeAntwort: "Richtige Antwort",
+    falscheAntwort: "Falsche Antwort. Bitte versuche es erneut.",
+    antwortAbsenden: "Antwort absenden",
+    zuruckZurNavigation: "Zurück zur Navigation",
+    herzlichenGluckwunsch: "Herzlichen Glückwunsch!",
+    duHastAlleStationen:
+      "Du hast alle Stationen des Pfarrkirchen Explorers abgeschlossen!",
+    zertifikatHerunterladen: "Zertifikat herunterladen",
+    stationsdatenNichtGefunden: "Stationsdaten nicht gefunden.",
+  },
+  en: {
+    welcomeTitle: "Welcome to Pfarrkirchen Explorer!",
+    welcomeDescription: "Get ready to discover the hidden treasures of Pfarrkirchen.",
+    start: "Start",
+    routeOverview: "Route Overview",
+    station: "Station",
+    von: "of",
+    pfarrkirchenExplorer: "Pfarrkirchen Explorer",
+    entdeckeDieSchatze: "Discover the hidden treasures of Pfarrkirchen!",
+    navigationTo: "Navigation to",
+    routeInGoogleMaps: "Open route in Google Maps",
+    angekommen: "Arrived!",
+    mehrUber: "More about",
+    weiter: "Next",
+    richtigeAntwort: "Correct answer",
+    falscheAntwort: "Wrong answer. Please try again.",
+    antwortAbsenden: "Submit answer",
+    zuruckZurNavigation: "Back to navigation",
+    herzlichenGluckwunsch: "Congratulations!",
+    duHastAlleStationen: "You have completed all stations of the Pfarrkirchen Explorer!",
+    zertifikatHerunterladen: "Download certificate",
+    stationsdatenNichtGefunden: "Station data not found.",
+  },
+};
+
 /**
  * Home Component: Main component for the Pfarrkirchen Explorer application.
  * Manages the state and logic for the scavenger hunt, including welcome screen, route overview,
@@ -32,21 +84,12 @@ export default function Home() {
   const [showOverview, setShowOverview] = useState(false); // Visibility of the route overview screen
 
   // Station stage can be "navigation", "explanation", or "question"
-  const [stationStage, setStationStage] = useState<
-    "navigation" | "explanation" | "question"
-  >("navigation");
+  const [stationStage, setStationStage] =
+    useState<"navigation" | "explanation" | "question">("navigation");
   const [feedbackMessage, setFeedbackMessage] = useState(""); // Feedback message for the user
   const [submitted, setSubmitted] = useState(false); // Whether the answer has been submitted
-
-  // Effect to potentially show a welcome screen on initial load (currently disabled)
-  useEffect(() => {
-    // Simulate loading or any initial setup
-    // const timer = setTimeout(() => {
-    //   setShowWelcome(false);
-    // }, 3000); // Show welcome screen for 3 seconds
-
-    // return () => clearTimeout(timer);
-  }, []);
+  const [language, setLanguage] = useState("de"); // Current language state
+  const t = translations[language];
 
   const totalStations = stations.length; // Total number of stations
 
@@ -57,20 +100,21 @@ export default function Home() {
     const currentStationData = stations[currentStation - 1];
 
     if (!currentStationData) {
-      setFeedbackMessage("Stationsdaten nicht gefunden.");
+      setFeedbackMessage(t.stationsdatenNichtGefunden);
       return;
     }
 
     setSubmitted(true);
 
     if (
-      currentStationData.options[currentStationData.correctAnswerIndex] === answer
+      currentStationData.options[currentStationData.correctAnswerIndex] ===
+      answer
     ) {
       setStationStage("explanation");
       setSubmitted(false);
       setFeedbackMessage("");
     } else {
-      setFeedbackMessage("Falsche Antwort. Bitte versuche es erneut.");
+      setFeedbackMessage(t.falscheAntwort);
     }
   };
 
@@ -120,9 +164,13 @@ export default function Home() {
     const doc = new jsPDF();
 
     // Add content to the PDF
-    doc.text("Zertifikat für den Abschluss des Pfarrkirchen Explorers", 10, 10);
-    doc.text("Herzlichen Glückwunsch!", 10, 30);
-    doc.text("Sie haben alle Stationen erfolgreich abgeschlossen.", 10, 40);
+    doc.text(
+      translations[language].zertifikatHerunterladen,
+      10,
+      10
+    );
+    doc.text(translations[language].herzlichenGluckwunsch, 10, 30);
+    doc.text(translations[language].duHastAlleStationen, 10, 40);
     doc.text("Ausgestellt am: " + new Date().toLocaleDateString(), 10, 50);
 
     // Download the PDF
@@ -146,37 +194,52 @@ export default function Home() {
         // Welcome Screen
         <div className="text-center">
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Willkommen beim Pfarrkirchen Explorer!
+            {t.welcomeTitle}
           </h1>
           <p className="text-lg text-muted-foreground mb-6">
-            Mach dich bereit, die verborgenen Schätze von Pfarrkirchen zu
-            entdecken.
+            {t.welcomeDescription}
           </p>
+          <div className="flex justify-center space-x-4 mb-4">
+            <Button
+              onClick={() => setLanguage("de")}
+              className="transition-transform hover:scale-105"
+            >
+              Deutsch
+            </Button>
+            <Button
+              onClick={() => setLanguage("en")}
+              className="transition-transform hover:scale-105"
+            >
+              English
+            </Button>
+          </div>
           <Button
             onClick={handleStartClick}
             className="transition-transform hover:scale-105"
           >
-            Starten
+            {t.start}
           </Button>
         </div>
       ) : showOverview ? (
         // Route Overview Screen
-        <RouteOverview stations={stations} onComplete={handleOverviewComplete} />
+        <RouteOverview
+          stations={stations}
+          onComplete={handleOverviewComplete}
+          language={language}
+        />
       ) : !isCompleted ? (
         // Main content when the scavenger hunt is in progress
         <div className="transition-all duration-300 ease-out w-full max-w-md">
           <header className="text-center mb-8">
             <h1 className="text-3xl font-bold text-foreground">
-              Pfarrkirchen Explorer
+              {t.pfarrkirchenExplorer}
             </h1>
-            <p className="text-muted-foreground">
-              Entdecke die verborgenen Schätze von Pfarrkirchen!
-            </p>
+            <p className="text-muted-foreground">{t.entdeckeDieSchatze}</p>
           </header>
 
           <Progress value={progress} className="w-full max-w-md mb-4" />
           <p className="text-sm text-muted-foreground mb-4">
-            Station {currentStation} von {totalStations}
+            {t.station} {currentStation} {t.von} {totalStations}
           </p>
 
           <div className="relative h-full">
@@ -186,6 +249,7 @@ export default function Home() {
                 <NavigationScreen
                   station={stations[currentStation - 1]}
                   onArrived={handleNavigationArrived}
+                  language={language}
                 />
               </div>
             )}
@@ -195,6 +259,7 @@ export default function Home() {
                 <ExplanationScreen
                   station={stations[currentStation - 1]}
                   onComplete={handleExplanationComplete}
+                  language={language}
                 />
               </div>
             )}
@@ -209,6 +274,7 @@ export default function Home() {
                   submitted={submitted}
                   handleAnswerSubmit={handleAnswerSubmit}
                   onBackToNavigation={handleBackToNavigation}
+                  language={language}
                 />
               </div>
             )}
@@ -218,16 +284,16 @@ export default function Home() {
         // Completion Screen
         <div className="text-center">
           <h2 className="text-2xl font-bold text-foreground mb-4">
-            Herzlichen Glückwunsch!
+            {t.herzlichenGluckwunsch}
           </h2>
           <p className="text-muted-foreground mb-6">
-            Du hast alle Stationen des Pfarrkirchen Explorers abgeschlossen!
+            {t.duHastAlleStationen}
           </p>
           <Button
             onClick={handleDownloadCertificate}
             className="transition-transform hover:scale-105"
           >
-            Zertifikat herunterladen
+            {t.zertifikatHerunterladen}
           </Button>
         </div>
       )}
@@ -247,16 +313,20 @@ interface RouteOverviewProps {
     longitude: number;
   }[];
   onComplete: () => void;
+  language: string;
 }
 
 const RouteOverview: React.FC<RouteOverviewProps> = ({
   stations,
   onComplete,
+  language,
 }) => {
+  const t = translations[language];
+
   return (
     <div className="flex flex-col items-center">
       <h2 className="text-2xl font-bold text-foreground mb-4">
-        Routenübersicht
+        {t.routeOverview}
       </h2>
       <div className="mb-4 w-full max-w-md map-animation-container">
         <Map stations={stations} currentStation={0} zoom={12} />
@@ -272,7 +342,7 @@ const RouteOverview: React.FC<RouteOverviewProps> = ({
         onClick={onComplete}
         className="transition-transform hover:scale-105"
       >
-        Erkundung starten
+        {t.start}
       </Button>
     </div>
   );
@@ -291,18 +361,21 @@ interface NavigationScreenProps {
     longitude: number;
   };
   onArrived: () => void;
+  language: string;
 }
 
 const NavigationScreen: React.FC<NavigationScreenProps> = ({
   station,
   station: { latitude, longitude, title, googleMapsLink },
   onArrived,
+  language,
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [currentLocation, setCurrentLocation] = useState<
     { latitude: number; longitude: number } | null
   >(null);
   const [error, setError] = useState<string | null>(null);
+  const t = translations[language];
 
   useEffect(() => {
     const loadMap = async () => {
@@ -376,7 +449,7 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Navigation zu {title}</CardTitle>
+        <CardTitle>{t.navigationTo} {title}</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4">
         {error && <div className="text-red-500">{error}</div>}
@@ -391,14 +464,14 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
             target="_blank"
             rel="noopener noreferrer"
           >
-            Route in Google Maps öffnen
+            {t.routeInGoogleMaps}
           </a>
         </Button>
         <Button
           onClick={onArrived}
           className="transition-transform hover:scale-105"
         >
-          Angekommen!
+          {t.angekommen}
         </Button>
       </CardContent>
     </Card>
@@ -411,17 +484,21 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
 interface ExplanationScreenProps {
   station: { id: number; title: string; explanation: string; mapUrl: string };
   onComplete: () => void;
+  language: string;
 }
 
 const ExplanationScreen: React.FC<ExplanationScreenProps> = ({
   station,
   station: { title, mapUrl, explanation },
   onComplete,
+  language,
 }) => {
+  const t = translations[language];
+
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Mehr über {title}</CardTitle>
+        <CardTitle>{t.mehrUber} {title}</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4">
         <div>
@@ -436,7 +513,7 @@ const ExplanationScreen: React.FC<ExplanationScreenProps> = ({
           onClick={onComplete}
           className="transition-transform hover:scale-105"
         >
-          Weiter
+          {t.weiter}
         </Button>
       </CardContent>
     </Card>
@@ -460,6 +537,7 @@ interface QuestionScreenProps {
   submitted: boolean;
   handleAnswerSubmit: () => void;
   onBackToNavigation: () => void;
+  language: string;
 }
 
 const QuestionScreen: React.FC<QuestionScreenProps> = ({
@@ -471,7 +549,10 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
   submitted,
   handleAnswerSubmit,
   onBackToNavigation,
+  language,
 }) => {
+  const t = translations[language];
+
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
@@ -509,13 +590,13 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
           onClick={handleAnswerSubmit}
           className="transition-transform hover:scale-105"
         >
-          Antwort absenden
+          {t.antwortAbsenden}
         </Button>
         <Button
           onClick={onBackToNavigation}
           className="transition-transform hover:scale-105"
         >
-          Zurück zur Navigation
+          {t.zuruckZurNavigation}
         </Button>
       </CardContent>
     </Card>
