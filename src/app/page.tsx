@@ -295,6 +295,7 @@ interface NavigationScreenProps {
 
 const NavigationScreen: React.FC<NavigationScreenProps> = ({
   station,
+  station: { latitude, longitude, title, googleMapsLink },
   onArrived,
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -313,16 +314,10 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
       // Check if the map container already has a Leaflet map instance
       if (mapRef.current.leafletElement) {
         // If so, just set the view to the station's coordinates
-        mapRef.current.leafletElement.setView(
-          [station.latitude, station.longitude],
-          15
-        );
+        mapRef.current.leafletElement.setView([latitude, longitude], 15);
       } else {
         // Otherwise, create a new map instance
-        const map = L.map(mapRef.current).setView(
-          [station.latitude, station.longitude],
-          15
-        );
+        const map = L.map(mapRef.current).setView([latitude, longitude], 15);
 
         L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
           maxZoom: 19,
@@ -330,9 +325,9 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
             '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         }).addTo(map);
 
-        L.marker([station.latitude, station.longitude])
+        L.marker([latitude, longitude])
           .addTo(map)
-          .bindPopup(station.title);
+          .bindPopup(title);
 
         // Store the map instance in the ref
         mapRef.current.leafletElement = map;
@@ -376,12 +371,12 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
     if (mapRef.current && !mapRef.current._leaflet_id) {
       loadMap();
     }
-  }, [station.latitude, station.longitude, station.title]);
+  }, [latitude, longitude, title]);
 
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Navigation zu {station.title}</CardTitle>
+        <CardTitle>Navigation zu {title}</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4">
         {error && <div className="text-red-500">{error}</div>}
@@ -392,7 +387,7 @@ const NavigationScreen: React.FC<NavigationScreenProps> = ({
         />
         <Button asChild className="transition-transform hover:scale-105">
           <a
-            href={station.googleMapsLink}
+            href={googleMapsLink}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -420,22 +415,23 @@ interface ExplanationScreenProps {
 
 const ExplanationScreen: React.FC<ExplanationScreenProps> = ({
   station,
+  station: { title, mapUrl, explanation },
   onComplete,
 }) => {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Mehr über {station.title}</CardTitle>
+        <CardTitle>Mehr über {title}</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4">
         <div>
           <img
-            src={station.mapUrl}
-            alt={`Karte von ${station.title}`}
+            src={mapUrl}
+            alt={`Karte von ${title}`}
             className="rounded-md"
           />
         </div>
-        <p>{station.explanation}</p>
+        <p>{explanation}</p>
         <Button
           onClick={onComplete}
           className="transition-transform hover:scale-105"
@@ -468,6 +464,7 @@ interface QuestionScreenProps {
 
 const QuestionScreen: React.FC<QuestionScreenProps> = ({
   station,
+  station: { title, riddle, options, correctAnswerIndex },
   answer,
   setAnswer,
   feedbackMessage,
@@ -478,8 +475,8 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>{station.title}</CardTitle>
-        <CardDescription>{station.riddle}</CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{riddle}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         {feedbackMessage && (
@@ -487,19 +484,27 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
             {feedbackMessage}
           </div>
         )}
-        <RadioGroup value={answer} onValueChange={setAnswer}>
-          {station.options.map((option, index) => (
-            <div key={index} className="flex items-center space-x-2">
-              <RadioGroupItem value={option} id={`option-${index}`} />
-              <label
-                htmlFor={`option-${index}`}
-                className="cursor-pointer leading-none peer-data-[state=checked]:text-foreground"
-              >
-                {option}
-              </label>
-            </div>
+        <div className="grid grid-cols-2 gap-4">
+          {options.map((option, index) => (
+            <Button
+              key={index}
+              variant="outline"
+              className={`
+                w-full
+                text-black
+                border-black
+                rounded-md
+                transition-colors
+                hover:bg-green-500
+                hover:text-white
+                ${answer === option ? "bg-green-500 text-white" : ""}
+              `}
+              onClick={() => setAnswer(option)}
+            >
+              {option}
+            </Button>
           ))}
-        </RadioGroup>
+        </div>
         <Button
           onClick={handleAnswerSubmit}
           className="transition-transform hover:scale-105"
